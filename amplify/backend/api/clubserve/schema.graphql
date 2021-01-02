@@ -1,0 +1,26 @@
+type Bookings @model @auth(rules: [{allow: private}]) @key(name: "bySessions", fields: ["sessionsID"]) {
+  id: ID!
+  sessionsID: ID!
+  userId: String!
+}
+
+type Sessions @model @auth(rules: [{allow: private}]) @key(name: "bySessionType", fields: ["sessiontypeID"]) {
+  id: ID!
+  dateTime: AWSDate!
+  coachUserID: ID!
+  completed: Boolean
+  capacity: Int!
+  currentBookings: Int!
+  sessiontypeID: ID!
+  Bookings: [Bookings] @connection(keyName: "bySessions", fields: ["id"])
+}
+
+type SessionType @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  sessionTypeID: ID!
+  eligibleGroupIDs: [ID!]
+  day: String!
+  Sessions: [Sessions] @connection(keyName: "bySessionType", fields: ["id"])
+  sessionName: String!
+}
+ 

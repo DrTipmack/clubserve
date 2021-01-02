@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "clubserve",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authclubserve",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

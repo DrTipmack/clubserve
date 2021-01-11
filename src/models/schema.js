@@ -101,7 +101,7 @@ export const schema = {
                     "name": "currentBookings",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "sessiontypeID": {

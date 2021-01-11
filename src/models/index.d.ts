@@ -18,7 +18,7 @@ export declare class Sessions {
   readonly coachUserID: string;
   readonly completed?: boolean;
   readonly capacity: number;
-  readonly currentBookings: number;
+  readonly currentBookings?: number;
   readonly sessiontypeID: string;
   readonly Bookings?: (Bookings | null)[];
   constructor(init: ModelInit<Sessions>);

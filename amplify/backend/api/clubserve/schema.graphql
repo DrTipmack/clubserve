@@ -10,7 +10,7 @@ type Sessions @model @auth(rules: [{allow: private}]) @key(name: "bySessionType"
   coachUserID: ID!
   completed: Boolean
   capacity: Int!
-  currentBookings: Int!
+  currentBookings: Int
   sessiontypeID: ID!
   Bookings: [Bookings] @connection(keyName: "bySessions", fields: ["id"])
 }

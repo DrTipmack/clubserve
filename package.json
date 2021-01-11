@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/datastore": "^2.9.3",
     "@aws-amplify/ui-components": "^0.9.8",
     "@aws-amplify/ui-react": "^0.2.33",
     "@testing-library/jest-dom": "^5.11.6",

@@ -1,60 +1,124 @@
 import "./App.css";
-import * as React from "react";
-
-import {DataStore} from "@aws-amplify/datastore";
+import React, {useState} from "react";
 import {SessionType} from "./models";
+import awsconfig from "./aws-exports";
+import Amplify from "aws-amplify";
+import {DataStore} from "@aws-amplify/datastore";
 
-async function querySessionTypes () {
-	const models = await DataStore.query(SessionType);
-	return (
+Amplify.configure(awsconfig);
+//TODO Fix "DataStore - Data won't be synchronized. No GraphQL endpoint configured. Did you forget `Amplify.configure(awsconfig)`?"
+
+function SessionTypesListBox()  {
+	//TODO Make Google Classroom effect
+	const [SessionTypes, setSessionTypes] = useState(undefined);
+
+	const getSessionTypes = async () => {
+		const models = await DataStore.query(SessionType);
+		console.log(models)
+		setSessionTypes(models)
+	}
+
+	const renderData = (data) => {
+		return data.map((type, i) => {
+				return (
+					<li key={i}>{type.sessionName}</li>
+				)
+			})
+		}
+
+
+	return(
 		<div>
-			{models}
+			<h1>
+				Get All Session Types
+			</h1>
+			<div>
+				<button onClick={getSessionTypes}>
+					Go Gettem!
+				</button>
+				<br />
+			</div>
+
+			{/*Display received data*/}
+			<div>
+				<ol>
+					{SessionTypes && renderData(SessionTypes)}
+				</ol>
+			</div>
 		</div>
-	);
+	)
 }
 
-class SessionTypesControl extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			sessionTypes: undefined
+function SessionTypesCreateBox() {
+	const [values, setValues] = useState({})
+	const createSessionTypes = async (values) => {
+		try {
+			await DataStore.save(
+				new SessionType({
+					"sessionTypeID": values.sessionTypeID,
+					"eligibleGroupIDs": values.eligibleGroupIDs,
+					"day": values.day,
+					"Sessions": values.Sessions,
+					"sessionName": values.name
+				})
+			);
+		}catch (e) {
+			console.log(e);
 		}
 	}
 
-	componentDidMount () {
-		querySessionTypes();
+	const handleInputChange = (event) => {
+		const target = event.target;
+		const value = target.value;
+		const name = target.name;
+
+		setValues({
+			[name]: value
+		});
+	}
+	const handleSubmit = (event) => {
+		createSessionTypes(values).then(r => alert("sessionType created with: " + values));
+		event.preventDefault();
 	}
 
-	createSessionTypes = async (day, name) => {
-		await DataStore.save(
-			new SessionType({
-				"sessionTypeID": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d",
-				"eligibleGroupIDs": [],
-				"day": day,
-				"Sessions": [],
-				"sessionName": name
-			})
-		);
-
-	};
-
-
-	querySessionTypes = () => {
-		const models = DataStore.query(SessionType);
-		models.then(
-			() => {
-				this.setState({sessionTypes : models})
-			}
-		)
-	};
-
-	render () {
+	const render = () => {
+		const inputTypes = ["sessionTypeID", "eligibleGroupIDs", "day", "Sessions", "name"];
+		const inputFields = inputTypes.map((type) => {
+			return (
+				<div>
+					<label> {type}
+						<input
+							name= {type}
+							type= "text"
+							onChange={handleInputChange}
+						/>
+					</label>
+					<br />
+				</div>
+			)
+		})
 		return (
-			<h3>
-				{this.state.sessionTypes}
-			</h3>
+			<div>
+				<form onSubmit={handleSubmit}>
+					{inputFields}
+				</form>
+			</div>
 		);
 	}
+
+	return (
+		{render}
+	);
+}
+
+function SessionTypesControl(props) {
+	return (
+		<div>
+			<SessionTypesCreateBox />
+			<SessionTypesListBox />
+		</div>
+	)
+
 }
 
 class App extends React.Component {

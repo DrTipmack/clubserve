@@ -2,7 +2,7 @@ import React from "react";
 import "./Auth.css";
 import App from "./App";
 import Amplify from "aws-amplify";
-import {AmplifyAuthenticator, AmplifySignUp} from "@aws-amplify/ui-react";
+import {AmplifyAuthenticator, AmplifySignUp, AmplifySignIn} from "@aws-amplify/ui-react";
 import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
 
@@ -24,12 +24,14 @@ const AuthStateApp = () => {
 		<AmplifyAuthenticator>
 			<AmplifySignUp
 				slot="sign-up"
+				headerText= "Hallo"
 				formFields={[
 					{type: "username"},
 					{type: "password"},
 					{type: "email"}
 				]}
 			/>
+			<AmplifySignIn headerText= "Welcome " slot="sign-in"/>
 		</AmplifyAuthenticator>
 	);
 };
